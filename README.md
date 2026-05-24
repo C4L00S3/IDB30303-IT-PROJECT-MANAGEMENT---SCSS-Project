@@ -64,5 +64,4 @@ The following accounts are pre-configured for testing purposes. All accounts sha
 
 ## Project Details
 - **Course:** IDB30303 IT Project Management
-- **Milestone:** 3 (System Design & Prototype)
 - **Developed by:** Louis GOUBEAUX & Noé COMBE
