@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Lecturer Dashboard - SSCSS{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Book a Classroom or Lab</h2>
+    </div>
+    <form method="POST" action="{{ url_for('booking.book_room') }}">
+        <div class="form-group" style="max-width: 400px;">
+            <label class="form-label" for="room">Select Facility</label>
+            <select id="room" name="room" class="form-control" required>
+                <option value="">Choose a room...</option>
+                <option value="Lab 1">Computer Lab 1</option>
+                <option value="Lab 2">Computer Lab 2</option>
+                <option value="Room A1">Classroom A1</option>
+                <option value="Room A2">Classroom A2</option>
+            </select>
+        </div>
+        <div class="form-group" style="max-width: 400px;">
+            <label class="form-label" for="date">Date</label>
+            <input type="date" id="date" name="date" class="form-control" required>
+        </div>
+        <div class="form-group" style="max-width: 400px;">
+            <label class="form-label" for="time_slot">Time Slot</label>
+            <select id="time_slot" name="time_slot" class="form-control" required>
+                <option value="08:00-10:00">08:00 AM - 10:00 AM</option>
+                <option value="10:00-12:00">10:00 AM - 12:00 PM</option>
+                <option value="14:00-16:00">02:00 PM - 04:00 PM</option>
+                <option value="16:00-18:00">04:00 PM - 06:00 PM</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Booking</button>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Your Booking History</h2>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Facility</th>
+                    <th>Date</th>
+                    <th>Time Slot</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr>
+                    <td>{{ b.room }}</td>
+                    <td>{{ b.date }}</td>
+                    <td>{{ b.time_slot }}</td>
+                    <td><span class="badge badge-success">{{ b.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-muted text-center">No bookings found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

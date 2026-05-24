@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - SSCSS{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <!-- Booking Section -->
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Book a Room or Lab</h2>
+            </div>
+            <form method="POST" action="{{ url_for('booking.book_room') }}">
+                <div class="form-group">
+                    <label class="form-label" for="room">Select Room/Lab</label>
+                    <select id="room" name="room" class="form-control" required>
+                        <option value="">Choose a room...</option>
+                        <option value="Lab 1">Computer Lab 1</option>
+                        <option value="Lab 2">Computer Lab 2</option>
+                        <option value="Room A1">Classroom A1</option>
+                        <option value="Room A2">Classroom A2</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="date">Date</label>
+                    <input type="date" id="date" name="date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="time_slot">Time Slot</label>
+                    <select id="time_slot" name="time_slot" class="form-control" required>
+                        <option value="08:00-10:00">08:00 AM - 10:00 AM</option>
+                        <option value="10:00-12:00">10:00 AM - 12:00 PM</option>
+                        <option value="14:00-16:00">02:00 PM - 04:00 PM</option>
+                        <option value="16:00-18:00">04:00 PM - 06:00 PM</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Booking</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Your Recent Bookings</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Room</th>
+                            <th>Date</th>
+                            <th>Time Slot</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in bookings %}
+                        <tr>
+                            <td>{{ b.room }}</td>
+                            <td>{{ b.date }}</td>
+                            <td>{{ b.time_slot }}</td>
+                            <td><span class="badge badge-success">{{ b.status }}</span></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-muted text-center">No bookings found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Maintenance Section -->
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Report Maintenance Issue</h2>
+            </div>
+            <form method="POST" action="{{ url_for('maintenance.submit_request') }}">
+                <div class="form-group">
+                    <label class="form-label" for="m_room">Room/Lab</label>
+                    <input type="text" id="m_room" name="room" class="form-control" required placeholder="e.g. Lab 2">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="category">Category</label>
+                    <select id="category" name="category" class="form-control" required>
+                        <option value="Hardware">Hardware (Computers, Projector)</option>
+                        <option value="Software">Software (OS, Apps)</option>
+                        <option value="Facilities">Facilities (AC, Lighting, Furniture)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="description">Issue Description</label>
+                    <textarea id="description" name="description" class="form-control" rows="3" required placeholder="Please describe the issue in detail..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-danger">Submit Request</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Your Maintenance Requests</h2>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Room</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in maintenance %}
+                        <tr>
+                            <td>{{ m.room }}</td>
+                            <td>{{ m.category }}</td>
+                            <td>
+                                {% if m.status == 'Pending' %}
+                                    <span class="badge badge-warning">Pending</span>
+                                {% else %}
+                                    <span class="badge badge-success">{{ m.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-muted text-center">No requests submitted.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

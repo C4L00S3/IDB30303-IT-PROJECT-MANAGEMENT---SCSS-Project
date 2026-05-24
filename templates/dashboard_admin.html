@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - SSCSS{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">All System Bookings</h2>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Facility</th>
+                    <th>Date</th>
+                    <th>Time Slot</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr>
+                    <td>#{{ b.id }}</td>
+                    <td>{{ b.user_name }}</td>
+                    <td>{{ b.room }}</td>
+                    <td>{{ b.date }}</td>
+                    <td>{{ b.time_slot }}</td>
+                    <td><span class="badge badge-success">{{ b.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-muted text-center">No bookings found in the system.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">Maintenance Requests</h2>
+        <p class="text-muted" style="margin-top: 0.5rem; font-size: 0.875rem;">Manage and assign technicians to pending facility issues.</p>
+    </div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Facility</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in maintenance %}
+                <tr>
+                    <td>#{{ m.id }}</td>
+                    <td>{{ m.user_name }}</td>
+                    <td>{{ m.room }}</td>
+                    <td>{{ m.category }}</td>
+                    <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="{{ m.description }}">
+                        {{ m.description }}
+                    </td>
+                    <td>
+                        {% if m.status == 'Pending' %}
+                            <span class="badge badge-warning">Pending</span>
+                        {% else %}
+                            <span class="badge badge-success">{{ m.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="POST" action="{{ url_for('maintenance.assign_technician', request_id=m.id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-primary" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">
+                                Assign Tech
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7" class="text-muted text-center">No maintenance requests found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
