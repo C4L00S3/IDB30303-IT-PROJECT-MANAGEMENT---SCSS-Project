@@ -33,3 +33,27 @@ def book_room():
     conn.close()
     
     return redirect(url_for(f'dashboard.{session["role"]}_dashboard'))
+
+@booking_bp.route('/booking/delete/<int:booking_id>', methods=['POST'])
+def delete_booking(booking_id):
+    if 'user_id' not in session:
+        return redirect(url_for('auth.login'))
+        
+    user_id = session['user_id']
+    role = session['role']
+    
+    conn = get_db_connection()
+    booking = conn.execute('SELECT * FROM bookings WHERE id = ?', (booking_id,)).fetchone()
+    
+    if booking:
+        # Admins can delete anything; users can only delete their own
+        if role == 'admin' or booking['user_id'] == user_id:
+            conn.execute('DELETE FROM bookings WHERE id = ?', (booking_id,))
+            conn.commit()
+            flash('Booking deleted successfully.', 'success')
+        else:
+            flash('You do not have permission to delete this booking.', 'danger')
+            
+    conn.close()
+    
+    return redirect(url_for(f'dashboard.{role}_dashboard'))

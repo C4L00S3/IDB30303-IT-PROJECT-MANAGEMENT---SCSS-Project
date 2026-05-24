@@ -26,17 +26,32 @@ def submit_request():
 @maintenance_bp.route('/admin/maintenance/assign/<int:request_id>', methods=['POST'])
 def assign_technician(request_id):
     """
-    INTENTIONAL LIMITATION / SIMULATED BUG FOR MILESTONE 4 (MONITORING & CONTROLLING)
-    This route simulates a 500 Internal Server Error due to a "Database Transaction Lock" 
-    or "Missing Security Clearance" module.
+    Assign a technician to a maintenance request.
+    This resolves the simulated issue from Milestone 3.
     """
     if session.get('role') != 'admin':
         return redirect(url_for('auth.login'))
         
-    # We purposefully throw an abort 500 to simulate the issue log for Milestone 4.
-    # The error will be caught by a generic error handler or just display the default 500 page.
-    # To make it clear in the logs:
-    print(f"ERROR: Administrator attempted to assign technician to request {request_id}")
-    print("Database transaction lock - Technician assignment module requires security clearance.")
+    conn = get_db_connection()
+    conn.execute(
+        "UPDATE maintenance_requests SET status = 'In Progress', technician_assigned = 'Internal Tech Team' WHERE id = ?",
+        (request_id,)
+    )
+    conn.commit()
+    conn.close()
     
-    abort(500, description="Database transaction lock - Technician assignment module requires security clearance. Please log this issue for Milestone 4.")
+    flash(f'Technician successfully assigned to Request #{request_id}.', 'success')
+    return redirect(url_for('dashboard.admin_dashboard'))
+
+@maintenance_bp.route('/admin/maintenance/delete/<int:request_id>', methods=['POST'])
+def delete_request(request_id):
+    if session.get('role') != 'admin':
+        return redirect(url_for('auth.login'))
+        
+    conn = get_db_connection()
+    conn.execute('DELETE FROM maintenance_requests WHERE id = ?', (request_id,))
+    conn.commit()
+    conn.close()
+    
+    flash('Maintenance request deleted successfully.', 'success')
+    return redirect(url_for('dashboard.admin_dashboard'))
