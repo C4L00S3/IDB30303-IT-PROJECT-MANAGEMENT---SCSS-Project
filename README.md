@@ -7,7 +7,6 @@ The system provides a unified platform for students, lecturers, and administrato
 - **Role-Based Access Control (RBAC):** Distinct dashboards and access levels for Students, Lecturers, and Admins.
 - **Facility Booking & Conflict Detection:** Prevents double-booking of classrooms and labs.
 - **Maintenance Request Management:** Allows users to report hardware, software, or facility issues.
-- **SaaS-like Premium UI:** Built with HTML, CSS, and dynamic Jinja templates.
 
 ## Prerequisites
 - Python 3.8+
@@ -26,7 +25,20 @@ The system provides a unified platform for students, lecturers, and administrato
    pip install -r requirements.txt
    ```
 
-3. **Run the application:**
+3. **Configure the Environment Variables:**
+   Create a `.env` file in the root directory. You can copy the template provided:
+   ```bash
+   cp .env.example .env
+   ```
+   Or manually create `.env` and add the following content:
+   ```env
+   FLASK_APP=app.py
+   FLASK_ENV=development
+   SECRET_KEY=your_secret_key_here
+   DATABASE=scss.db
+   ```
+
+4. **Run the application:**
    The SQLite database (`scss.db`) will be automatically generated with the default test accounts on the first run.
    ```bash
    python app.py
